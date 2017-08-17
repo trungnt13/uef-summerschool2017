@@ -165,3 +165,42 @@ def one_hot(y, nb_classes):
     a = np.zeros((len(y), nb_classes), 'uint8')
     a[np.arange(len(y)), y] = 1
     return a
+
+
+def plot_confusion_matrix(cm, labels, axis=None, fontsize=13, colorbar=False,
+                          title=None):
+    from matplotlib import pyplot as plt
+    cmap = plt.cm.Blues
+
+    # column normalize
+    if np.max(cm) > 1:
+        cm_normalized = cm.astype('float') / cm.sum(axis=1)[:, np.newaxis]
+    else:
+        cm_normalized = cm
+    if axis is None:
+        axis = plt.gca()
+
+    im = axis.imshow(cm_normalized, interpolation='nearest', cmap=cmap)
+    if title is not None:
+        axis.set_title(title)
+    # axis.get_figure().colorbar(im)
+
+    tick_marks = np.arange(len(labels))
+    axis.set_xticks(tick_marks)
+    axis.set_yticks(tick_marks)
+    axis.set_xticklabels(labels, rotation=90, fontsize=fontsize)
+    axis.set_yticklabels(labels, fontsize=fontsize)
+    axis.set_ylabel('True label', fontsize=fontsize)
+    axis.set_xlabel('Predicted label', fontsize=fontsize)
+    # Turns off grid on the left Axis.
+    axis.grid(False)
+
+    if colorbar == 'all':
+        fig = axis.get_figure()
+        axes = fig.get_axes()
+        fig.colorbar(im, ax=axes)
+    elif colorbar:
+        plt.colorbar(im, ax=axis)
+
+    # axis.tight_layout()
+    return axis

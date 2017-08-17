@@ -25,6 +25,8 @@ from keras.optimizers import RMSprop
 # Helper and constants
 # ===========================================================================
 NB_OF_VISUALIZATION = 25
+TRAINING_PORTION = 0.5
+VALID_PORTION = 0.2
 
 current_script_path = os.path.dirname(sys.argv[0])
 current_script_path = os.path.join('.', current_script_path)
@@ -54,12 +56,8 @@ for i in range(NB_OF_VISUALIZATION):
     ax.axis('off')
     # plot grey scale image require 2D array
     plt.imshow(x[i][:, :, 0], cmap=plt.cm.Greys_r)
-    # add labels
-    if ((i + 1) % n) == 0:
-        labels += ' ' + str(y[i]) + ' |'
-    else:
-        labels += ' ' + str(y[i])
-plt.suptitle("Labels:" + labels)
+    ax.set_title("Number: %d" % y[i])
+plt.tight_layout()
 
 # ====== augmentation the data ====== #
 img = x[0]
@@ -116,8 +114,8 @@ permutation = np.random.permutation(len(x))
 x = x[permutation]
 y = y[permutation]
 
-nb_train = int(0.6 * len(x))
-nb_valid = int(0.2 * len(x))
+nb_train = int(TRAINING_PORTION * len(x))
+nb_valid = int(VALID_PORTION * len(x))
 nb_test = len(x) - nb_train - nb_valid
 
 x_train = x[:nb_train]
@@ -169,24 +167,32 @@ ax.hist(y_test, bins=10)
 ax.set_title("Testing distribution")
 plt.tight_layout()
 
-plt.show()
-
 # ====== convert labels to one_hot for training ====== #
+labels = ["Number: %d" % i for i in y_train[:16]]
 y_train = one_hot(y_train, nb_classes=10)
+y_aug = one_hot(y_aug, nb_classes=10)
 y_test = one_hot(y_test, nb_classes=10)
 y_valid = one_hot(y_valid, nb_classes=10)
 print("Onehot labels:")
-print(y_train[:8])
+plt.figure()
+plt.imshow(y_train[:16], cmap=plt.cm.Greys_r)
+plt.xticks(np.arange(10))
+plt.yticks(np.arange(16), labels)
+plt.suptitle("One-hot labels matrix")
+
+# ====== show everything ====== #
+plt.show()
 
 # ====== create and training the network ====== #
+print("*****************************")
+print("On original training set")
+print("*****************************")
 model = Sequential()
 model.add(Reshape(target_shape=(784,), input_shape=(28, 28, 1)))
-model.add(Dense(512, activation='relu'))
-model.add(Dropout(0.2))
-model.add(Dense(512, activation='relu'))
+model.add(Dense(256, activation='relu'))
 model.add(Dropout(0.2))
 model.add(Dense(10, activation='softmax'))
-
+#showing the network configuration
 model.summary()
 
 model.compile(loss='categorical_crossentropy',
@@ -195,7 +201,32 @@ model.compile(loss='categorical_crossentropy',
 
 history = model.fit(x_train, y_train,
                     batch_size=128,
-                    epochs=8,
+                    epochs=5,
+                    verbose=1,
+                    validation_data=(x_valid, y_valid))
+score = model.evaluate(x_test, y_test, verbose=0)
+print('Test loss:', score[0])
+print('Test accuracy:', score[1])
+
+# ====== create and training the network on Augmented data ====== #
+print("*****************************")
+print("On augmented training set")
+print("*****************************")
+model = Sequential()
+model.add(Reshape(target_shape=(784,), input_shape=(28, 28, 1)))
+model.add(Dense(256, activation='relu'))
+model.add(Dropout(0.2))
+model.add(Dense(10, activation='softmax'))
+#showing the network configuration
+model.summary()
+
+model.compile(loss='categorical_crossentropy',
+              optimizer=RMSprop(),
+              metrics=['accuracy'])
+
+history = model.fit(x_aug, y_aug,
+                    batch_size=128,
+                    epochs=5,
                     verbose=1,
                     validation_data=(x_valid, y_valid))
 score = model.evaluate(x_test, y_test, verbose=0)
