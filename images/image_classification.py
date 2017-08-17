@@ -14,7 +14,7 @@ from scipy.stats import itemfreq
 import numpy as np
 np.random.seed(1208)
 
-from utils import rotate, shift, zoom, shear, one_hot
+from utils import rotate, shift, zoom, shear, one_hot, cifar_labels
 
 from keras.utils import Progbar
 from keras.models import Sequential

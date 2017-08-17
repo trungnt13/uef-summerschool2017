@@ -2,11 +2,24 @@
 Can easily be extended to include new transformations,
 new preprocessing methods, etc...
 """
-from __future__ import absolute_import
-from __future__ import print_function
+from __future__ import absolute_import, print_function
 
 import numpy as np
 import scipy.ndimage as ndi
+
+
+cifar_labels = {
+    0: 'airplane',
+    1: 'automobile',
+    2: 'bird',
+    3: 'cat',
+    4: 'deer',
+    5: 'dog',
+    6: 'frog',
+    7: 'horse',
+    8: 'ship',
+    9: 'truck',
+}
 
 
 def apply_transform(x,
@@ -204,3 +217,4 @@ def plot_confusion_matrix(cm, labels, axis=None, fontsize=13, colorbar=False,
 
     # axis.tight_layout()
     return axis
+
