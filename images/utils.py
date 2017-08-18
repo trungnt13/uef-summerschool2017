@@ -6,6 +6,7 @@ from __future__ import absolute_import, print_function
 
 import numpy as np
 import scipy.ndimage as ndi
+from scipy.stats import itemfreq
 
 
 cifar_labels = {
@@ -214,7 +215,17 @@ def plot_confusion_matrix(cm, labels, axis=None, fontsize=13, colorbar=False,
         fig.colorbar(im, ax=axes)
     elif colorbar:
         plt.colorbar(im, ax=axis)
-
-    # axis.tight_layout()
     return axis
 
+
+def plot_hist(y, ax, title, nb_classes=10, map_label=None):
+    ind = np.arange(nb_classes)
+    y = [j for i, j in itemfreq(y)]
+    ax.bar(ind, y, 0.8)
+    ax.set_title(title)
+    ax.set_xticks(ind)
+    ax.set_xticklabels([
+        str(i) for i in range(nb_classes)]
+        if map_label is None
+        else [str(map_label(i)) for i in range(nb_classes)
+    ])
