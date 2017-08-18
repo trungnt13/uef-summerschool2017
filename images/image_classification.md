@@ -207,9 +207,9 @@ plt.figure()
 ax = plt.subplot(3, 1, 1)
 plot_hist(y_train, ax, "Training distribution")
 ax = plt.subplot(3, 1, 2)
-plot_hist(y_train, ax, "Validating distribution")
+plot_hist(y_valid, ax, "Validating distribution")
 ax = plt.subplot(3, 1, 3)
-plot_hist(y_train, ax, "Testing distribution")
+plot_hist(y_test, ax, "Testing distribution")
 plt.tight_layout()
 ```
 
