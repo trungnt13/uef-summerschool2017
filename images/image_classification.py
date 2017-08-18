@@ -17,7 +17,7 @@ np.random.seed(1208)
 from utils import (rotate, shift, zoom, shear, one_hot, cifar_labels,
                    plot_hist)
 
-from keras.utils import Progbar
+from keras.utils.generic_utils import Progbar
 from keras.models import Sequential
 from keras.layers import Dense, Dropout, Reshape
 from keras.layers import Conv2D, MaxPooling2D, Flatten

@@ -24,7 +24,7 @@ np.random.seed(1208)
 from utils import (rotate, shift, zoom, shear, one_hot, cifar_labels,
                    plot_hist)
 
-from keras.utils import Progbar
+from keras.utils.generic_utils import Progbar
 from keras.models import Sequential
 from keras.layers import Dense, Dropout, Reshape
 from keras.layers import Conv2D, MaxPooling2D, Flatten
@@ -225,7 +225,7 @@ y_aug = one_hot(y_aug, nb_classes=10)
 y_test = one_hot(y_test, nb_classes=10)
 y_valid = one_hot(y_valid, nb_classes=10)
 plt.figure()
-plt.imshow(y_train[:16], cmap=plt.cm.Greys_r)
+plt.imshow(y_train[:16], cmap=plt.cm.Greys_r, interpolation='nearest')
 plt.xticks(np.arange(10))
 plt.yticks(np.arange(16), labels)
 plt.suptitle("One-hot labels matrix")
@@ -258,9 +258,7 @@ def train_and_test_dnn(x_train, y_train,
                   optimizer=RMSprop(),
                   metrics=['accuracy'])
 
-    history = model.fit(x_train, y_train,
-                        batch_size=128,
-                        epochs=5,
+    history = model.fit(x_train, y_train, 128, 5,
                         verbose=1,
                         validation_data=(x_valid, y_valid))
     # ====== plot history ====== #
@@ -477,9 +475,7 @@ def train_and_test_cnn(x_train, y_train,
     model.compile(loss='categorical_crossentropy',
                   optimizer=RMSprop(),
                   metrics=['accuracy'])
-    history = model.fit(x_train, y_train,
-                        batch_size=128,
-                        epochs=5,
+    history = model.fit(x_train, y_train, 128, 5,
                         verbose=1,
                         validation_data=(x_valid, y_valid))
     # ====== plot history ====== #
