@@ -67,11 +67,19 @@ def train_and_test_dnn(x_train, y_train,
                         validation_data=(x_valid, y_valid))
     # ====== plot history ====== #
     plt.figure()
+    plt.subplot(1, 2, 1)
     train_loss = history.history['loss']
     val_loss = history.history['val_loss']
-    plt.plot(train_loss, color='b', label='Training set')
-    plt.plot(val_loss, color='r', label="Validing set")
-    plt.suptitle(title)
+    plt.plot(train_loss, color='b', label='Training loss')
+    plt.plot(val_loss, color='r', label="Validing loss")
+    plt.suptitle(title + "(cross-entropy loss)")
+    plt.legend()
+    plt.subplot(1, 2, 2)
+    train_loss = history.history['acc']
+    val_loss = history.history['val_acc']
+    plt.plot(train_loss, color='b', label='Training Accuracy')
+    plt.plot(val_loss, color='r', label="Validing Accracy")
+    plt.suptitle(title + "(Accuracy)")
     plt.legend()
     # ====== final evaluation ====== #
     score = model.evaluate(x_test, y_test, verbose=0)
@@ -109,11 +117,19 @@ def train_and_test_cnn(x_train, y_train,
                         validation_data=(x_valid, y_valid))
     # ====== plot history ====== #
     plt.figure()
+    plt.subplot(1, 2, 1)
     train_loss = history.history['loss']
     val_loss = history.history['val_loss']
-    plt.plot(train_loss, color='b', label='Training set')
-    plt.plot(val_loss, color='r', label="Validing set")
-    plt.suptitle(title)
+    plt.plot(train_loss, color='b', label='Training loss')
+    plt.plot(val_loss, color='r', label="Validing loss")
+    plt.suptitle(title + "(cross-entropy loss)")
+    plt.legend()
+    plt.subplot(1, 2, 2)
+    train_loss = history.history['acc']
+    val_loss = history.history['val_acc']
+    plt.plot(train_loss, color='b', label='Training Accuracy')
+    plt.plot(val_loss, color='r', label="Validing Accracy")
+    plt.suptitle(title + "(Accuracy)")
     plt.legend()
     # ====== final evaluation ====== #
     score = model.evaluate(x_test, y_test, verbose=0)
